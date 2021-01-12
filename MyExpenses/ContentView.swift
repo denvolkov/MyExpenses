@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct ExpenseItem {
+struct ExpenseItem: Identifiable {
+    let id = UUID()
     let name: String
     let type: String
     let amount: Int
@@ -19,12 +20,13 @@ class Expenses: ObservableObject {
 
 
 struct ContentView: View {
+    @State private var showingAddExpense = false
     @ObservedObject var expenses = Expenses()
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(expenses.items, id: \.name) { item in
+                ForEach(expenses.items) { item in
                     Text(item.name)
                 }
                 .onDelete(perform: removeItems)
@@ -32,26 +34,22 @@ struct ContentView: View {
             .navigationBarTitle("Мои расходы")
             .navigationBarItems(trailing:
                                     Button(action: {
-                                        let expense = ExpenseItem(name: "Test", type: "", amount: 50)
-                                        self.expenses.items.append(expense)
+                                        self.showingAddExpense = true
                                     }) {
                                         Image(systemName: "plus")
                                     }
             )
+            .sheet(isPresented: $showingAddExpense) {
+                AddView(expenses: self.expenses)
+            }
         }
         
-        }
+    }
     
     func removeItems(as offsets: IndexSet) {
         expenses.items.remove(atOffsets: offsets)
     }
 }
-
-
-
-
-
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
