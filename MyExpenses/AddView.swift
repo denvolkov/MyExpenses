@@ -25,19 +25,21 @@ struct AddView: View {
                         Text($0)
                     }
                 }
-            }
+            
             TextField("Стоимость", text: $amount)
                 .keyboardType(.numberPad)
         }
         .navigationBarTitle("Добавить")
-        .navigationBarItems(trailing: Button("Сохранить") {
-            if let actualAmount = Int(self.amount) {
-                let item = ExpenseItem(name: self.name, type: self.type, amount: actualAmount)
-                self.expenses.items.append(item)
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        })
+        .navigationBarItems(trailing:
+                                Button("Сохранить") {
+                                    if let actualAmount = Int(self.amount) {
+                                        let item = ExpenseItem(name: self.name, type: self.type, amount: actualAmount)
+                                        self.expenses.items.append(item)
+                                        self.presentationMode.wrappedValue.dismiss()
+                                    }
+                                })
     }
+}
 }
 
 struct AddView_Previews: PreviewProvider {
